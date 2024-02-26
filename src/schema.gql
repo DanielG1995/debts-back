@@ -1,0 +1,117 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type Payment {
+  id: ID!
+  debt: Debt!
+  paidAmount: Float!
+  paymentDate: DateTime
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type User {
+  id: ID!
+  email: String!
+  name: String!
+  img: String!
+  debtsAsDebtor: [Debt!]!
+  debtsAsCreditor: [Debt!]!
+  getTotalDebt: Float!
+  getTotalPending: Float!
+}
+
+type Debt {
+  id: ID!
+  description: String!
+  date: String
+  debtor: User!
+  creditor: User!
+  maxDate: String
+  done: Boolean!
+  payments(offset: Int = 0, limit: Int = 10): [Payment!]!
+  amount: Float!
+  totalPaidMount: Float!
+  totalPending: Float!
+}
+
+type AuthResponse {
+  token: String!
+  user: User!
+}
+
+type Query {
+  debts: [Debt!]!
+  debt(id: String!): Debt!
+  debtsByDebtor(id: String!): [Debt!]!
+  debtsByCreditor(id: String!): [Debt!]!
+  payment(id: String!): Payment!
+  users: [User!]!
+  user(id: String!): User!
+  revalidate: AuthResponse!
+}
+
+type Mutation {
+  createDebt(createDebtInput: CreateDebtInput!): Debt!
+  updateDebt(updateDebtInput: UpdateDebtInput!): Debt!
+  deleteDebt(id: String!): String!
+  createPayment(createPaymentInput: CreatePaymentInput!): Payment!
+  updatePayment(updatePaymentInput: UpdatePaymentInput!): Payment!
+  deletePaymenById(id: Int!): Payment!
+  updateUser(updateUserInput: UpdateUserInput!): User!
+  removeUser(id: Int!): User!
+  signup(signupInput: SignupInput!): AuthResponse!
+  login(loginInput: LoginInput!): AuthResponse!
+}
+
+input CreateDebtInput {
+  description: String!
+  debtor: ID!
+  creditor: ID!
+  maxDate: String
+  amount: Float!
+}
+
+input UpdateDebtInput {
+  description: String
+  id: ID!
+  creditor: ID
+  amount: Float
+}
+
+input CreatePaymentInput {
+  """Monto a cancelar"""
+  paidAmount: Float!
+  paymentDate: DateTime
+  debt: ID!
+}
+
+input UpdatePaymentInput {
+  """Monto a cancelar"""
+  paidAmount: Float
+  paymentDate: DateTime
+  debt: ID
+  id: Int!
+}
+
+input UpdateUserInput {
+  """Example field (placeholder)"""
+  exampleField: Int
+  id: Int!
+}
+
+input SignupInput {
+  email: String!
+  name: String!
+  img: String!
+}
+
+input LoginInput {
+  email: String!
+  name: String!
+  img: String!
+}
